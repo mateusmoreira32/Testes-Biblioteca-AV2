@@ -3,9 +3,7 @@ package modulo3;
 import conexao.Conexao;
 import modulo1.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -94,5 +92,23 @@ public class Faculdade {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static Faculdade getFaculdadeById(int id){
+        Faculdade faculdade = new Faculdade();
+        try {
+            Connection myConnection = Conexao.getConnection();
+            Statement statement = myConnection.createStatement();
+            String sql = "select * from faculdade where id = "+id;
+            ResultSet resultSet = statement.executeQuery(sql);
+            while(resultSet.next()){
+                faculdade.setNome(resultSet.getString("nome"));
+                faculdade.setArrecadado(Double.parseDouble(resultSet.getString("arrecadado")));
+            }
+            return faculdade;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return faculdade;
     }
 }

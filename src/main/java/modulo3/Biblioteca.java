@@ -1,9 +1,15 @@
 package modulo3;
 
+import conexao.Conexao;
 import modulo1.Bibliotecario;
 import modulo1.Gerente;
 import modulo4.Livro;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Biblioteca {
@@ -78,6 +84,23 @@ public class Biblioteca {
 
     public void setBibliotecario(Bibliotecario bibliotecario) {
         this.bibliotecario = bibliotecario;
+    }
+
+    public int findIdByName(){
+        try {
+            int id = 0;
+            Connection myConnection = Conexao.getConnection();
+            Statement statement = myConnection.createStatement();
+            String sql = "select ID from biblioteca where nome = '"+this.getNome()+"'";
+            ResultSet resultSet = statement.executeQuery(sql);
+            while(resultSet.next()){
+                id = Integer.parseInt(resultSet.getString("id"));
+            }
+            return id;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
 
