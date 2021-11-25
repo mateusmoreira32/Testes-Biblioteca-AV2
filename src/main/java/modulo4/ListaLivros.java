@@ -31,4 +31,16 @@ public class ListaLivros {
     public Livro findPorAutor(String autor){
         return livros.stream().filter(p -> p.getAutor().equals(autor)).findFirst().orElse(null);
     }
+
+    public List<Livro> groupNyName(String name){
+        List<Livro> livrosReturn = new ArrayList<Livro>();
+
+        this.getLivros().forEach(l -> {
+            if(l.getNome().startsWith(name)){
+                livrosReturn.add(l);
+            }
+        });
+
+        return livrosReturn;
+    }
 }
