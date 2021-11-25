@@ -1,5 +1,11 @@
 package modulo3;
 
+import conexao.Conexao;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,5 +36,24 @@ public class ListaBiblioteca {
 
     public List<Biblioteca> findPorQuantLivros(int quant){
         return bibliotecas.stream().filter(p -> p.getLivros().size() >= quant).collect(Collectors.toList());
+    }
+
+    public List<Biblioteca> findAll() {
+        List<Biblioteca> bibliotecas = new ArrayList<Biblioteca>();
+        try {
+            Connection myConnection = Conexao.getConnection();
+            Statement statement = myConnection.createStatement();
+            String sql = "select * from biblioteca";
+            ResultSet resultSet = statement.executeQuery(sql);
+            while(resultSet.next()){
+                Biblioteca biblioteca = new Biblioteca();
+                biblioteca.setNome(resultSet.getString("nome"));
+                bibliotecas.add(biblioteca);
+            }
+            return bibliotecas;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bibliotecas;
     }
 }
