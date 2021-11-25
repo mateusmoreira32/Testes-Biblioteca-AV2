@@ -3,9 +3,9 @@ package modulo4;
 import conexao.Conexao;
 import modulo3.Biblioteca;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Livro {
@@ -108,5 +108,50 @@ public class Livro {
             }
             return false;
         }
+    }
+
+    public static Livro findLivroByCodigo(String codigo){
+        Livro livro = new Livro();
+        try {
+            Connection myConnection = Conexao.getConnection();
+            Statement statement = myConnection.createStatement();
+            String sql = "select * from livro where codigo = '"+codigo+"'";
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while(resultSet.next()){
+                livro.setCodigo(codigo);
+                livro.setNome(resultSet.getString("nome"));
+                livro.setAutor(resultSet.getString("autor"));
+                livro.setValor(Double.parseDouble(resultSet.getString("valor")));
+            }
+            return livro;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return livro;
+    }
+
+    public static List<Livro> findAll(){
+        List<Livro> livros = new ArrayList<Livro>();
+        try {
+            Connection myConnection = Conexao.getConnection();
+            Statement statement = myConnection.createStatement();
+            String sql = "select * from livro";
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while(resultSet.next()){
+                Livro livro = new Livro();
+                livro.setCodigo(resultSet.getString("codigo"));
+                livro.setNome(resultSet.getString("nome"));
+                livro.setAutor(resultSet.getString("autor"));
+                livro.setValor(Double.parseDouble(resultSet.getString("valor")));
+
+                livros.add(livro);
+            }
+            return livros;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return livros;
     }
 }
